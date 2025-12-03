@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import applicationRoutes from "./routes/applicationRoute.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+
 
 
 dotenv.config();
@@ -10,7 +11,8 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api", applicationRoutes);
+app.use("/api/student/applications", applicationRoutes);
+
 
 
 // ✅ الاتصال بقاعدة البيانات
