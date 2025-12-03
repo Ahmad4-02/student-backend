@@ -5,6 +5,6 @@ export default function auth(req, res, next) {
     return res.status(401).json({ message: "غير مصرح" });
   }
 
-  // لاحقاً سنضيف JWT حقيقي
+  // لاحقاً سنضيف التحقق الحقيقي من JWT
   next();
 }
