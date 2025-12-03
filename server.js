@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import applicationRoutes from "./routes/applicationRoutes.js";
 
@@ -9,37 +10,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ ربط جميع المسارات تحت /api
-app.use("/api", applicationRoutes);
+// ✅ المسار الصحيح
+app.use("/api/student/applications", applicationRoutes);
 
-// ✅ مسار اختبار
+// ✅ الاتصال بقاعدة البيانات (اختياري حاليًا)
+mongoose
+  .connect(process.env.MONGO_URI || "")
+  .then(() => console.log("DB Connected ✅"))
+  .catch((err) => console.log("DB Skipped ⚠️"));
+
+// ✅ اختبار السيرفر
 app.get("/", (req, res) => {
   res.send("Backend is running ✅");
-});
-
-// ================================
-// ✅ مسارات الطالب (Students API)
-// ================================
-
-// 🔐 تسجيل دخول الطالب
-app.post("/api/student/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  // مؤقتاً بدون قاعدة بيانات
-  if (email === "test@test.com" && password === "123456") {
-    res.json({
-      token: "real_token_123",
-      student: {
-        firstName: "Ahmed",
-        lastName: "Mohamad",
-        email,
-        phone: "09999999",
-        country: "Syria",
-      },
-    });
-  } else {
-    res.status(401).json({ message: "بيانات غير صحيحة" });
-  }
 });
 
 // ✅ تشغيل السيرفر
