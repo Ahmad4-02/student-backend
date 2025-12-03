@@ -1,5 +1,7 @@
+import applicationRoutes from "./routes/applicationRoutes.js";
 const express = require("express");
 const cors = require("cors");
+app.use("/api/applications", applicationRoutes);
 
 const app = express();
 app.use(cors());
