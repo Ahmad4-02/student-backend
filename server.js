@@ -5,7 +5,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ تسجيل دخول طالب (تجريبي)
+// ✅ الصفحة الرئيسية
+app.get("/", (req, res) => {
+  res.send("Backend is running ✅");
+});
+
+// ✅ تسجيل دخول تجريبي
 app.post("/api/student/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -25,6 +30,7 @@ app.post("/api/student/login", (req, res) => {
   }
 });
 
+// ✅ الطلبات
 app.get("/api/applications", (req, res) => {
   res.json([
     { id: 1, program: "هندسة برمجيات", status: "قيد المراجعة" },
@@ -32,10 +38,7 @@ app.get("/api/applications", (req, res) => {
   ]);
 });
 
-app.get("/", (req, res) => {
-  res.send("Backend is running ✅");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
-
-
-
-app.listen(5000, () => console.log("Server running ✅"));
