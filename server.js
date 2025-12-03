@@ -1,21 +1,38 @@
-import applicationRoutes from "./routes/applicationRoutes.js";
-const express = require("express");
-const cors = require("cors");
-app.use("/api/applications", applicationRoutes);
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import applicationRoutes from "./routes/applicationRoute.js";
+
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/api", applicationRoutes);
 
-// ✅ الصفحة الرئيسية
+
+// ✅ الاتصال بقاعدة البيانات
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("DB Connected ✅"))
+  .catch((err) => console.log(err));
+
+// ✅ مسار اختبار
 app.get("/", (req, res) => {
   res.send("Backend is running ✅");
 });
 
-// ✅ تسجيل دخول تجريبي
-app.post("/api/student/login", (req, res) => {
+// ================================
+// ✅ مسارات الطالب (Students API)
+// ================================
+
+// 🔐 تسجيل دخول الطالب
+app.post("/api/student/login", async (req, res) => {
   const { email, password } = req.body;
 
+  // مؤقتاً بدون قاعدة بيانات
   if (email === "test@test.com" && password === "123456") {
     res.json({
       token: "real_token_123",
@@ -32,15 +49,27 @@ app.post("/api/student/login", (req, res) => {
   }
 });
 
-// ✅ الطلبات
-app.get("/api/applications", (req, res) => {
+// ✅ جلب بيانات الطالب
+app.get("/api/student/profile", (req, res) => {
+  res.json({
+    firstName: "Ahmed",
+    lastName: "Mohamad",
+    email: "test@test.com",
+    phone: "09999999",
+    country: "Syria",
+  });
+});
+
+// ✅ طلبات الطالب
+app.get("/api/student/applications", (req, res) => {
   res.json([
-    { id: 1, program: "هندسة برمجيات", status: "قيد المراجعة" },
-    { id: 2, program: "إدارة أعمال", status: "مقبول" },
+    { id: 1, university: "Istanbul University", status: "Pending" },
+    { id: 2, university: "Ankara University", status: "Accepted" },
   ]);
 });
 
+// ✅ تشغيل السيرفر
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log(`Server running on port ${PORT} ✅`);
 });
